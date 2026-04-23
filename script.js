@@ -1,10 +1,8 @@
 /* --- CONFIGURACIÓN DE CONEXIÓN --- */
-// 1. CAMBIA ESTO: Pon el ID de tu hoja de Google Sheets
-const ID_HOJA = "1xKbWP5fjUQht1GR4gtn7aUKYk7A9zUs7zClrGmk5psM"; 
+// URL proporcionada para la exportación pública en formato CSV
+const URL_BASE = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRQPIxpWVhMn0NvBCI1_NVLD9cc7Yk3iqsTu1c2aJXpokd1R86pH1R77WWX0ClR3dP5Dq7rlB8tfuio/pub?output=csv";
 
-const URL_BASE = `https://docs.google.com/spreadsheets/d/${ID_HOJA}/export?format=csv`;
-
-// GIDs de cada hoja (Tema)
+// Identificadores de las hojas (GIDs) correspondientes a cada tema
 const GIDS = {
     2: "990874879", 3: "1711453863", 4: "1927285028", 5: "959381328", 6: "231419367",
     7: "919487249", 8: "1710258635", 9: "393049523", 10: "1245517020", 14: "917229204",
@@ -19,35 +17,35 @@ const datosTemario = [
     { id: 4, cat: 'tema-naranja', nombre: 'TEMA 4. La atención a la diversidad del alumnado. Medidas organizativas. ACNEAE.' },
     { id: 5, cat: 'tema-naranja', nombre: 'TEMA 5. La evaluación. Características, instrumentos. Promoción y refuerzo.' },
     { id: 6, cat: 'tema-amarillo', nombre: 'TEMA 6. Las tecnologías de la información y la comunicación. Aplicación en áreas.' },
-    { id: 7, cat: 'tema-verde', nombre: 'TEMA 7. Área de Conocimiento del medio. Enfoque, competencias y relación curricular.' },
-    { id: 8, cat: 'tema-verde', nombre: 'TEMA 8. Tiempo histórico. Etapas históricas. Documentos e intervención educativa.' },
-    { id: 9, cat: 'tema-verde', nombre: 'TEMA 9. El entorno y su conservación. Ecosistemas. Acción humana.' },
+    { id: 7, cat: 'tema-verde', nombre: 'TEMA 7. Área de Conocimiento del medio. Enfoque, características y propuestas.' },
+    { id: 8, cat: 'tema-verde', nombre: 'TEMA 8. Construcción de la noción de tiempo histórico. Etapas y utilización de documentos.' },
+    { id: 9, cat: 'tema-verde', nombre: 'TEMA 9. El entorno y su conservación. Ecosistemas y acción humana.' },
     { id: 10, cat: 'tema-verde', nombre: 'TEMA 10. Fenómenos físicos y cambios químicos. Materia y energía.' },
-    { id: 14, cat: 'tema-rojo', nombre: 'TEMA 14. Área de Lengua castellana y Literatura. Competencia comunicativa.' },
-    { id: 15, cat: 'tema-rojo', nombre: 'TEMA 15. Reflexión sobre el lenguaje. Adquisición lectura y escritura.' },
+    { id: 14, cat: 'tema-rojo', nombre: 'TEMA 14. Área de Lengua castellana y Literatura. Enfoque y competencias.' },
+    { id: 15, cat: 'tema-rojo', nombre: 'TEMA 15. Reflexión sobre el lenguaje. Adquisición de lectura y escritura.' },
     { id: 16, cat: 'tema-rojo', nombre: 'TEMA 16. Educación literaria. Biblioteca escolar y de aula.' },
-    { id: 17, cat: 'tema-rojo', nombre: 'TEMA 17. Adquisición y desarrollo del lenguaje. Comunicación oral.' },
-    { id: 18, cat: 'tema-rojo', nombre: 'TEMA 18. Proceso lector. Comprensión y fomento de la lectura.' },
-    { id: 19, cat: 'tema-rojo', nombre: 'TEMA 19. Expresión escrita. Métodos y composición de textos.' },
-    { id: 20, cat: 'tema-azul', nombre: 'TEMA 20. Área de Matemáticas. Enfoque y competencias.' },
-    { id: 21, cat: 'tema-azul', nombre: 'TEMA 21. Resolución de problemas. Métodos y estrategias.' },
-    { id: 22, cat: 'tema-azul', nombre: 'TEMA 22. Números y cálculo. Sistemas de numeración.' },
-    { id: 23, cat: 'tema-azul', nombre: 'TEMA 23. Magnitudes y su medida. Estimación.' },
-    { id: 24, cat: 'tema-azul', nombre: 'TEMA 24. Percepción espacial. Geometría.' },
-    { id: 25, cat: 'tema-azul', nombre: 'TEMA 25. Tratamiento de la información. Estadística y TIC.' }
+    { id: 17, cat: 'tema-rojo', nombre: 'TEMA 17. Proceso de adquisición y desarrollo del lenguaje. Comprensión oral.' },
+    { id: 18, cat: 'tema-rojo', nombre: 'TEMA 18. Desarrollo y características del proceso lector. Comprensión y fomento.' },
+    { id: 19, cat: 'tema-rojo', nombre: 'TEMA 19. Desarrollo de la expresión escrita. Métodos y estrategias.' },
+    { id: 20, cat: 'tema-azul', nombre: 'TEMA 20. Área de Matemáticas. Enfoque, características y competencias.' },
+    { id: 21, cat: 'tema-azul', nombre: 'TEMA 21. Resolución de problemas. Clases y métodos.' },
+    { id: 22, cat: 'tema-azul', nombre: 'TEMA 22. Aprendizaje de los números y el cálculo numérico.' },
+    { id: 23, cat: 'tema-azul', nombre: 'TEMA 23. Las magnitudes y su medida. Unidades e instrumentos.' },
+    { id: 24, cat: 'tema-azul', nombre: 'TEMA 24. Evolución de la percepción espacial. Geometría.' },
+    { id: 25, cat: 'tema-azul', nombre: 'TEMA 25. Recogida, organización y representación de la información.' }
 ];
 
-/* --- VARIABLES DE CONTROL --- */
+/* --- VARIABLES DE CONTROL DE VOZ --- */
 let mensajeActual = null;
 let estaPausado = false;
 let listaLecturaPunto = [];
 let indiceLecturaPunto = 0;
 let modoLecturaPunto = false;
 
-/* --- MOTOR DE ARRANQUE --- */
+/* --- INICIALIZACIÓN --- */
 function inicializar() {
     const grid = document.getElementById('grid-temas');
-    if(!grid) return;
+    if (!grid) return;
     grid.innerHTML = '';
     datosTemario.forEach(tema => {
         const btn = document.createElement('button');
@@ -63,24 +61,24 @@ async function cargarTema(temaObj) {
     document.getElementById('pantalla-tema').classList.remove('hidden');
     document.getElementById('titulo-tema-actual').innerText = temaObj.nombre;
     const contenedor = document.getElementById('contenedor-cascada');
-    contenedor.innerHTML = '<p style="text-align:center; padding:20px;">Cargando datos...</p>';
+    contenedor.innerHTML = '<p style="text-align:center; padding:20px;">Cargando contenido...</p>';
+
+    const urlFinal = URL_BASE.replace("output=csv", `gid=${GIDS[temaObj.id]}&output=csv`) + `&cache=${Date.now()}`;
 
     try {
-        const response = await fetch(`${URL_BASE}&gid=${GIDS[temaObj.id]}&cache=${Date.now()}`);
+        const response = await fetch(urlFinal);
+        if (!response.ok) throw new Error("Error al obtener los datos.");
         const csvText = await response.text();
         const filas = parsearCSV(csvText);
         const arbol = construirArbol(filas);
         renderizarCascada(arbol, contenedor);
     } catch (e) {
-        contenedor.innerHTML = `<p style="color:red; text-align:center; padding:20px;">${e.message}</p>`;
+        contenedor.innerHTML = `<p style="color:red; text-align:center; padding:20px;">Error de conexión: ${e.message}</p>`;
     }
 }
 
-/* --- LOGICA DE DATOS --- */
+/* --- PROCESAMIENTO DE DATOS --- */
 function parsearCSV(texto) {
-    if (texto.trim().startsWith("<!DOCTYPE")) {
-        throw new Error("Error: No se pudo acceder al Excel. Revisa que esté compartido como 'Cualquier persona con el enlace'.");
-    }
     const lineas = texto.split(/\r?\n(?=(?:(?:[^"]*"){2})*[^"]*$)/);
     return lineas.map(linea => {
         const cols = linea.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
@@ -103,14 +101,10 @@ function construirArbol(filas) {
     return arbol;
 }
 
-/* --- RENDERIZADO VISUAL --- */
+/* --- GENERACIÓN DE INTERFAZ --- */
 function renderizarCascada(arbol, contenedor) {
     contenedor.innerHTML = '';
     Object.keys(arbol).forEach(a => {
-        // Nivel A: Título de Punto
-        const divPadreA = document.createElement('div');
-        divPadreA.className = 'contenedor-A';
-
         const btnA = document.createElement('button');
         btnA.className = 'btn sec-A ' + getColorClase(a);
         btnA.innerHTML = `
@@ -190,29 +184,13 @@ function getColorClase(texto) {
     return 'sec-num';
 }
 
-/* --- SISTEMA DE VOZ --- */
+/* --- CONTROL DE SÍNTESIS DE VOZ --- */
 function gestionarVoz(btn, accion) {
     const texto = btn.closest('.bloque-final').querySelector('.contenido-E').innerText;
-
-    if (accion === 'stop') {
-        window.speechSynthesis.cancel();
-        estaPausado = false;
-        document.querySelectorAll('.bloque-final').forEach(c => c.classList.remove('leyendo-ahora'));
-        return;
-    }
-    if (accion === 'pause') {
-        if (window.speechSynthesis.speaking && !estaPausado) {
-            window.speechSynthesis.pause();
-            estaPausado = true;
-        }
-        return;
-    }
+    if (accion === 'stop') { window.speechSynthesis.cancel(); estaPausado = false; return; }
+    if (accion === 'pause') { if (window.speechSynthesis.speaking && !estaPausado) { window.speechSynthesis.pause(); estaPausado = true; } return; }
     if (accion === 'play') {
-        if (estaPausado) {
-            window.speechSynthesis.resume();
-            estaPausado = false;
-            return;
-        }
+        if (estaPausado) { window.speechSynthesis.resume(); estaPausado = false; return; }
         window.speechSynthesis.cancel();
         const mensaje = new SpeechSynthesisUtterance(texto);
         mensaje.lang = 'es-ES';
@@ -222,42 +200,18 @@ function gestionarVoz(btn, accion) {
 
 function gestionarVozPunto(btn, event, tituloTexto, accion) {
     event.stopPropagation();
-    if (accion === 'stop') {
-        window.speechSynthesis.cancel();
-        modoLecturaPunto = false;
-        estaPausado = false;
-        document.querySelectorAll('.bloque-final').forEach(c => c.classList.remove('leyendo-ahora'));
-        return;
-    }
-    if (accion === 'pause') {
-        if (window.speechSynthesis.speaking && !estaPausado) {
-            window.speechSynthesis.pause();
-            estaPausado = true;
-        }
-        return;
-    }
+    if (accion === 'stop') { window.speechSynthesis.cancel(); modoLecturaPunto = false; estaPausado = false; return; }
+    if (accion === 'pause') { if (window.speechSynthesis.speaking && !estaPausado) { window.speechSynthesis.pause(); estaPausado = true; } return; }
     if (accion === 'play') {
-        if (estaPausado) {
-            window.speechSynthesis.resume();
-            estaPausado = false;
-            return;
-        }
-        
-        // Empezar lectura secuencial
+        if (estaPausado) { window.speechSynthesis.resume(); estaPausado = false; return; }
+        window.speechSynthesis.cancel();
         const items = [{ texto: tituloTexto, elemento: null }];
         let contenedor = btn.closest('.sec-A').nextElementSibling;
-        const textosC = contenedor.querySelectorAll('.bloque-final');
-        textosC.forEach(t => {
-            items.push({ 
-                texto: t.querySelector('.contenido-E').innerText, 
-                elemento: t 
-            });
+        contenedor.querySelectorAll('.bloque-final').forEach(t => {
+            items.push({ texto: t.querySelector('.contenido-E').innerText, elemento: t });
         });
-
         if (items.length === 0) return;
-        modoLecturaPunto = true;
-        indiceLecturaPunto = 0;
-        listaLecturaPunto = items;
+        modoLecturaPunto = true; indiceLecturaPunto = 0; listaLecturaPunto = items;
         leerSiguienteDelPunto();
     }
 }

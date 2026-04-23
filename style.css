@@ -1,4 +1,4 @@
-/* PALETA DE COLORES Y VARIABLES */
+/* --- PALETA DE COLORES Y VARIABLES --- */
 :root {
     --naranja-f: #ffe5d9; --naranja-m: #fb5607;
     --amarillo-f: #fdffb6; --amarillo-m: #f9c74f;
@@ -10,73 +10,215 @@
     --turquesa-f: #e0f7fa; --turquesa-m: #0097a7;
     --morado-f: #ede7f6; --morado-m: #512da8;
     --negro-boton: #333333;
+    --fondo-gris: #f8f9fa;
 }
 
+/* --- CONFIGURACIÓN BASE PARA MÓVIL --- */
 body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    background-color: #f8f9fa;
-    margin: 0; padding: 15px;
-    display: flex; flex-direction: column; align-items: center;
+    background-color: #ffffff;
+    margin: 0;
+    padding: 15px;
+    padding-top: env(safe-area-inset-top);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    -webkit-tap-highlight-color: transparent;
+    color: #333;
 }
 
-.container { width: 100%; max-width: 600px; }
-.hidden { display: none !important; }
+header {
+    width: 100%;
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 1000;
+    padding: 15px 0;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #eee;
+}
 
-header { width: 100%; text-align: center; padding: 20px 0; position: sticky; top: 0; background: #f8f9fa; z-index: 100; }
-h1 { font-size: 1.1rem; font-weight: 800; text-transform: uppercase; margin: 0; color: #333; }
-
-/* BOTONES GENERALES */
-.btn {
-    width: 100%; border: 2px solid; border-radius: 14px;
-    padding: 16px 20px; margin-bottom: 10px;
-    text-align: left; font-weight: 700; font-size: 1rem;
-    cursor: pointer; transition: all 0.2s;
-    white-space: normal; line-height: 1.4;
+h1 { 
+    font-size: 1.15rem; 
+    text-align: center; 
+    color: #333; 
+    margin: 0; 
+    font-weight: 800;
+    text-transform: uppercase;
+    /* CORRECCIÓN: Evita que el título se corte */
+    white-space: normal !important;
+    overflow: visible !important;
+    line-height: 1.4;
     display: block;
+    width: 100%;
 }
 
-.btn:active { transform: scale(0.98); filter: brightness(0.9); }
+.container { 
+    width: 100%; 
+    max-width: 600px; 
+}
 
-/* COLORES TEMAS */
-.tema-naranja { background: var(--naranja-f); border-color: var(--naranja-m); color: #852d00; }
-.tema-amarillo { background: var(--amarillo-f); border-color: var(--amarillo-m); color: #7a5d00; }
-.tema-verde { background: var(--verde-f); border-color: var(--verde-m); color: #1b4332; }
-.tema-rojo { background: var(--rojo-f); border-color: var(--rojo-m); color: #780000; }
-.tema-azul { background: var(--azul-f); border-color: var(--azul-m); color: #004b73; }
+.grid-temas { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 12px; 
+}
 
-/* COLORES NIVELES CASCADA (COLUMNA A) */
-.sec-A { border-width: 3px; font-size: 1.1rem; }
-.sec-intro { background: var(--naranja-f); border-color: var(--naranja-m); }
-.sec-num { background: var(--verde-f); border-color: var(--verde-m); }
-.sec-concl { background: var(--amarillo-f); border-color: var(--amarillo-m); }
-.sec-biblio { background: var(--morado-f); border-color: var(--morado-m); }
+/* --- ESTILO DE LOS BOTONES (GENERAL) --- */
+.btn {
+    width: 100%;
+    display: block;
+    box-sizing: border-box;
+    height: auto !important;
+    min-height: 55px;
+    padding: 16px 20px;
+    margin-bottom: 8px;
+    border: 2px solid;
+    border-radius: 14px;
+    cursor: pointer;
+    text-align: left;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.4;
+    transition: all 0.2s;
+    white-space: normal;
+}
 
-/* JERARQUÍA VISUAL */
-.nivel-B { margin-left: 15px; width: calc(100% - 15px); background: white; font-size: 0.95rem; border-style: solid; }
-.nivel-C { margin-left: 30px; width: calc(100% - 30px); background: #fafafa; font-size: 0.9rem; border-style: dashed; }
+.btn:active {
+    filter: brightness(0.9);
+    transform: scale(0.98);
+}
 
-/* BLOQUE FINAL (COLUMNA D y E) */
+/* --- COLORES MENÚ PRINCIPAL --- */
+.tema-naranja { background-color: var(--naranja-f); border-color: var(--naranja-m); color: #852d00; }
+.tema-amarillo { background-color: var(--amarillo-f); border-color: var(--amarillo-m); color: #7a5d00; }
+.tema-verde { background-color: var(--verde-f); border-color: var(--verde-m); color: #1b4332; }
+.tema-rojo { background-color: var(--rojo-f); border-color: var(--rojo-m); color: #780000; }
+.tema-azul { background-color: var(--azul-f); border-color: var(--azul-m); color: #004b73; }
+
+/* --- JERARQUÍA CASCADA (COLUMNAS A, B, C) --- */
+.sec-A { border-width: 3px; margin-bottom: 12px; position: relative; display: flex; justify-content: space-between; align-items: center; }
+
+/* Colores dinámicos por tipo de sección */
+.sec-intro { background-color: var(--naranja-f); border-color: var(--naranja-m); }
+.sec-num { background-color: var(--verde-f); border-color: var(--verde-m); }
+.sec-concl { background-color: var(--amarillo-f); border-color: var(--amarillo-m); }
+.sec-biblio { background-color: var(--morado-f); border-color: var(--morado-m); }
+
+.nivel-B { 
+    margin-left: 15px; 
+    width: calc(100% - 15px); 
+    background-color: #ffffff; 
+    border-color: #ddd; 
+    font-size: 0.95rem; 
+}
+
+.nivel-C { 
+    margin-left: 30px; 
+    width: calc(100% - 30px); 
+    background-color: #fafafa; 
+    border-style: dashed; 
+    border-color: #ccc; 
+    font-size: 0.9rem; 
+    font-weight: 600;
+}
+
+/* --- TARJETAS FINALES (COLUMNAS D y E) --- */
 .bloque-final {
-    margin-bottom: 15px; padding: 15px;
-    background: white; border: 1.5px solid #ddd; border-radius: 12px;
+    margin-left: 15px;
+    margin-bottom: 15px;
+    padding: 15px;
+    background: white;
+    border: 1.5px solid #eee;
+    border-left: 5px solid var(--azul-m);
+    border-radius: 10px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    transition: background-color 0.4s;
 }
 
-.titulo-D { font-weight: 800; color: var(--azul-m); margin-bottom: 8px; display: block; }
-.contenido-E { font-size: 0.95rem; line-height: 1.5; color: #444; }
+.titulo-D { 
+    font-weight: 800; 
+    color: var(--azul-m); 
+    font-size: 0.95rem; 
+    display: block; 
+    margin-bottom: 8px; 
+}
 
-/* CONTROLES DE VOZ */
+.contenido-E { 
+    font-size: 0.95rem; 
+    line-height: 1.5; 
+    color: #444; 
+}
+
+/* --- EFECTO DE RESALTADO AL LEER --- */
+.leyendo-ahora {
+    background-color: rgba(251, 140, 0, 0.1) !important;
+    border-color: var(--color-intro) !important;
+    box-shadow: 0 0 12px rgba(251, 140, 0, 0.2);
+}
+
+/* --- CONTROLES DE VOZ --- */
+/* Estilo 3 botones (Play, Pause, Stop) en Cabeceras */
+.controles-punto {
+    display: flex;
+    gap: 5px;
+    margin-left: 10px;
+}
+
+.btn-punto {
+    background: var(--negro-boton);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 35px;
+}
+
+/* Estilo controles en tarjetas individuales */
 .controles-voz {
-    display: flex; gap: 8px; margin-top: 12px; border-top: 1px solid #eee; padding-top: 10px;
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+    border-top: 1px solid #f0f0f0;
+    padding-top: 10px;
 }
 
 .btn-voz {
-    background: #eee; border: none; border-radius: 6px;
-    padding: 8px 12px; font-size: 0.9rem; cursor: pointer;
+    background: #f4f4f4;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    color: #333;
 }
 
+.btn-voz:active { background: #e0e0e0; }
+
+/* --- UTILIDADES --- */
+.hidden { display: none !important; }
+
 #btn-volver {
-    width: 100%; margin-top: 40px; padding: 20px;
-    background: #333; color: white; border: none; border-radius: 12px;
-    font-weight: 800; text-transform: uppercase;
+    width: 100%;
+    margin: 40px 0;
+    padding: 20px;
+    background: #222;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-weight: 800;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Ajuste para que el texto de la sección A no pise los botones */
+.sec-A span {
+    flex: 1;
+    padding-right: 5px;
 }

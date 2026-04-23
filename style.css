@@ -1,0 +1,82 @@
+/* PALETA DE COLORES Y VARIABLES */
+:root {
+    --naranja-f: #ffe5d9; --naranja-m: #fb5607;
+    --amarillo-f: #fdffb6; --amarillo-m: #f9c74f;
+    --verde-f: #d8f3dc; --verde-m: #2d6a4f;
+    --rojo-f: #ffadad; --rojo-m: #c1121f;
+    --azul-f: #caf0f8; --azul-m: #0077b6;
+    --violeta-f: #f3e5f5; --violeta-m: #7b1fa2;
+    --fucsia-f: #fce4ec; --fucsia-m: #c2185b;
+    --turquesa-f: #e0f7fa; --turquesa-m: #0097a7;
+    --morado-f: #ede7f6; --morado-m: #512da8;
+    --negro-boton: #333333;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: #f8f9fa;
+    margin: 0; padding: 15px;
+    display: flex; flex-direction: column; align-items: center;
+}
+
+.container { width: 100%; max-width: 600px; }
+.hidden { display: none !important; }
+
+header { width: 100%; text-align: center; padding: 20px 0; position: sticky; top: 0; background: #f8f9fa; z-index: 100; }
+h1 { font-size: 1.1rem; font-weight: 800; text-transform: uppercase; margin: 0; color: #333; }
+
+/* BOTONES GENERALES */
+.btn {
+    width: 100%; border: 2px solid; border-radius: 14px;
+    padding: 16px 20px; margin-bottom: 10px;
+    text-align: left; font-weight: 700; font-size: 1rem;
+    cursor: pointer; transition: all 0.2s;
+    white-space: normal; line-height: 1.4;
+    display: block;
+}
+
+.btn:active { transform: scale(0.98); filter: brightness(0.9); }
+
+/* COLORES TEMAS */
+.tema-naranja { background: var(--naranja-f); border-color: var(--naranja-m); color: #852d00; }
+.tema-amarillo { background: var(--amarillo-f); border-color: var(--amarillo-m); color: #7a5d00; }
+.tema-verde { background: var(--verde-f); border-color: var(--verde-m); color: #1b4332; }
+.tema-rojo { background: var(--rojo-f); border-color: var(--rojo-m); color: #780000; }
+.tema-azul { background: var(--azul-f); border-color: var(--azul-m); color: #004b73; }
+
+/* COLORES NIVELES CASCADA (COLUMNA A) */
+.sec-A { border-width: 3px; font-size: 1.1rem; }
+.sec-intro { background: var(--naranja-f); border-color: var(--naranja-m); }
+.sec-num { background: var(--verde-f); border-color: var(--verde-m); }
+.sec-concl { background: var(--amarillo-f); border-color: var(--amarillo-m); }
+.sec-biblio { background: var(--morado-f); border-color: var(--morado-m); }
+
+/* JERARQUÍA VISUAL */
+.nivel-B { margin-left: 15px; width: calc(100% - 15px); background: white; font-size: 0.95rem; border-style: solid; }
+.nivel-C { margin-left: 30px; width: calc(100% - 30px); background: #fafafa; font-size: 0.9rem; border-style: dashed; }
+
+/* BLOQUE FINAL (COLUMNA D y E) */
+.bloque-final {
+    margin-bottom: 15px; padding: 15px;
+    background: white; border: 1.5px solid #ddd; border-radius: 12px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.titulo-D { font-weight: 800; color: var(--azul-m); margin-bottom: 8px; display: block; }
+.contenido-E { font-size: 0.95rem; line-height: 1.5; color: #444; }
+
+/* CONTROLES DE VOZ */
+.controles-voz {
+    display: flex; gap: 8px; margin-top: 12px; border-top: 1px solid #eee; padding-top: 10px;
+}
+
+.btn-voz {
+    background: #eee; border: none; border-radius: 6px;
+    padding: 8px 12px; font-size: 0.9rem; cursor: pointer;
+}
+
+#btn-volver {
+    width: 100%; margin-top: 40px; padding: 20px;
+    background: #333; color: white; border: none; border-radius: 12px;
+    font-weight: 800; text-transform: uppercase;
+}

@@ -1,5 +1,10 @@
-const URL_BASE = "https://docs.google.com/spreadsheets/d/e/2PACX-1vR6XujajlsE5zknJSIU7uzHCOlawQtQxHyU-GKlkcpMhNI4DzTOZjOeXYoAcdh6LXT3YyKSGiX_IakR/pub?output=csv";
+/* --- CONFIGURACIÓN DE CONEXIÓN --- */
+// 1. CAMBIA ESTO: Pon el ID de tu hoja de Google Sheets
+const ID_HOJA = "1xKbWP5fjUQht1GR4gtn7aUKYk7A9zUs7zClrGmk5psM"; 
 
+const URL_BASE = `https://docs.google.com/spreadsheets/d/${ID_HOJA}/export?format=csv`;
+
+// GIDs de cada hoja (Tema)
 const GIDS = {
     2: "990874879", 3: "1711453863", 4: "1927285028", 5: "959381328", 6: "231419367",
     7: "919487249", 8: "1710258635", 9: "393049523", 10: "1245517020", 14: "917229204",
@@ -32,11 +37,18 @@ const datosTemario = [
     { id: 25, cat: 'tema-azul', nombre: 'TEMA 25. Tratamiento de la información. Estadística y TIC.' }
 ];
 
+/* --- VARIABLES DE CONTROL --- */
 let mensajeActual = null;
 let estaPausado = false;
+let listaLecturaPunto = [];
+let indiceLecturaPunto = 0;
+let modoLecturaPunto = false;
 
+/* --- MOTOR DE ARRANQUE --- */
 function inicializar() {
     const grid = document.getElementById('grid-temas');
+    if(!grid) return;
+    grid.innerHTML = '';
     datosTemario.forEach(tema => {
         const btn = document.createElement('button');
         btn.className = `btn ${tema.cat}`;
@@ -51,80 +63,96 @@ async function cargarTema(temaObj) {
     document.getElementById('pantalla-tema').classList.remove('hidden');
     document.getElementById('titulo-tema-actual').innerText = temaObj.nombre;
     const contenedor = document.getElementById('contenedor-cascada');
-    contenedor.innerHTML = '<p style="text-align:center">Cargando contenido...</p>';
+    contenedor.innerHTML = '<p style="text-align:center; padding:20px;">Cargando datos...</p>';
 
     try {
-        const response = await fetch(`${URL_BASE}&gid=${GIDS[temaObj.id]}`);
+        const response = await fetch(`${URL_BASE}&gid=${GIDS[temaObj.id]}&cache=${Date.now()}`);
         const csvText = await response.text();
         const filas = parsearCSV(csvText);
         const arbol = construirArbol(filas);
         renderizarCascada(arbol, contenedor);
     } catch (e) {
-        contenedor.innerHTML = '<p>Error al cargar los datos.</p>';
+        contenedor.innerHTML = `<p style="color:red; text-align:center; padding:20px;">${e.message}</p>`;
     }
 }
 
+/* --- LOGICA DE DATOS --- */
 function parsearCSV(texto) {
+    if (texto.trim().startsWith("<!DOCTYPE")) {
+        throw new Error("Error: No se pudo acceder al Excel. Revisa que esté compartido como 'Cualquier persona con el enlace'.");
+    }
     const lineas = texto.split(/\r?\n(?=(?:(?:[^"]*"){2})*[^"]*$)/);
     return lineas.map(linea => {
         const cols = linea.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
         return cols.map(c => c.replace(/^"|"$/g, '').trim());
-    }).filter(cols => cols.length >= 5 && (cols[0] || cols[3]));
+    }).filter(cols => cols.length >= 4 && (cols[0] || cols[1] || cols[3]));
 }
 
 function construirArbol(filas) {
     const arbol = {};
     filas.forEach(f => {
         const [a, b, c, d, e] = f;
+        if (!a) return;
         if (!arbol[a]) arbol[a] = {};
-        if (!arbol[a][b]) arbol[a][b] = {};
-        if (!arbol[a][b][c]) arbol[a][b][c] = [];
-        if (d) arbol[a][b][c].push({ d, e });
+        const keyB = b || "_ROOT_";
+        if (!arbol[a][keyB]) arbol[a][keyB] = {};
+        const keyC = c || "_ROOT_";
+        if (!arbol[a][keyB][keyC]) arbol[a][keyB][keyC] = [];
+        if (d) arbol[a][keyB][keyC].push({ d, e });
     });
     return arbol;
 }
 
+/* --- RENDERIZADO VISUAL --- */
 function renderizarCascada(arbol, contenedor) {
     contenedor.innerHTML = '';
     Object.keys(arbol).forEach(a => {
-        const btnA = crearBotonNivel(a, 'sec-A ' + getColorClase(a));
+        // Nivel A: Título de Punto
+        const divPadreA = document.createElement('div');
+        divPadreA.className = 'contenedor-A';
+
+        const btnA = document.createElement('button');
+        btnA.className = 'btn sec-A ' + getColorClase(a);
+        btnA.innerHTML = `
+            <span>${a}</span>
+            <div class="controles-punto">
+                <button class="btn-punto" onclick="gestionarVozPunto(this, event, '${a}', 'play')">▶️</button>
+                <button class="btn-punto" onclick="gestionarVozPunto(this, event, '${a}', 'pause')">⏸️</button>
+                <button class="btn-punto" onclick="gestionarVozPunto(this, event, '${a}', 'stop')">⏹️</button>
+            </div>
+        `;
+
         const divB = document.createElement('div');
         divB.className = 'hidden';
+        btnA.onclick = () => divB.classList.toggle('hidden');
 
         Object.keys(arbol[a]).forEach(b => {
-            const containerB = b === "" ? divB : document.createElement('div');
-            if (b !== "") {
+            let targetContB = divB;
+            if (b !== "_ROOT_") {
                 const btnB = crearBotonNivel(b, 'nivel-B');
-                const divC = document.createElement('div');
-                divC.className = 'hidden';
-                btnB.onclick = () => divC.classList.toggle('hidden');
-                containerB.appendChild(btnB);
-                containerB.appendChild(divC);
-                
-                Object.keys(arbol[a][b]).forEach(c => {
-                    const containerC = c === "" ? divC : document.createElement('div');
-                    if (c !== "") {
-                        const btnC = crearBotonNivel(c, 'nivel-C');
-                        const divD = document.createElement('div');
-                        divD.className = 'hidden';
-                        btnC.onclick = () => divD.classList.toggle('hidden');
-                        containerC.appendChild(btnC);
-                        containerC.appendChild(divD);
-                        dibujarBloquesFinales(arbol[a][b][c], divD);
-                    } else {
-                        dibujarBloquesFinales(arbol[a][b][c], divC);
-                    }
-                    if (c !== "") containerB.lastChild.appendChild(containerC);
-                });
-            } else {
-                // Si B está vacío, miramos si C también
-                Object.keys(arbol[a][b]).forEach(c => {
-                    dibujarBloquesFinales(arbol[a][b][c], divB);
-                });
+                const subDivC = document.createElement('div');
+                subDivC.className = 'hidden';
+                btnB.onclick = (ev) => { ev.stopPropagation(); subDivC.classList.toggle('hidden'); };
+                divB.appendChild(btnB);
+                divB.appendChild(subDivC);
+                targetContB = subDivC;
             }
+
+            Object.keys(arbol[a][b]).forEach(c => {
+                let targetContC = targetContB;
+                if (c !== "_ROOT_") {
+                    const btnC = crearBotonNivel(c, 'nivel-C');
+                    const subDivD = document.createElement('div');
+                    subDivD.className = 'hidden';
+                    btnC.onclick = (ev) => { ev.stopPropagation(); subDivD.classList.toggle('hidden'); };
+                    targetContB.appendChild(btnC);
+                    targetContB.appendChild(subDivD);
+                    targetContC = subDivD;
+                }
+                dibujarTarjetasFinales(arbol[a][b][c], targetContC);
+            });
         });
 
-        btnA.onclick = () => divB.classList.toggle('hidden');
         contenedor.appendChild(btnA);
         contenedor.appendChild(divB);
     });
@@ -137,13 +165,13 @@ function crearBotonNivel(texto, clase) {
     return b;
 }
 
-function dibujarBloquesFinales(bloques, contenedor) {
+function dibujarTarjetasFinales(bloques, contenedor) {
     bloques.forEach(item => {
         const card = document.createElement('div');
         card.className = 'bloque-final';
         card.innerHTML = `
             <span class="titulo-D">${item.d}</span>
-            <div class="contenido-E">${item.e}</div>
+            <div class="contenido-E">${item.e || ''}</div>
             <div class="controles-voz">
                 <button class="btn-voz" onclick="gestionarVoz(this, 'play')">▶️</button>
                 <button class="btn-voz" onclick="gestionarVoz(this, 'pause')">⏸️</button>
@@ -162,12 +190,14 @@ function getColorClase(texto) {
     return 'sec-num';
 }
 
+/* --- SISTEMA DE VOZ --- */
 function gestionarVoz(btn, accion) {
     const texto = btn.closest('.bloque-final').querySelector('.contenido-E').innerText;
 
     if (accion === 'stop') {
         window.speechSynthesis.cancel();
         estaPausado = false;
+        document.querySelectorAll('.bloque-final').forEach(c => c.classList.remove('leyendo-ahora'));
         return;
     }
     if (accion === 'pause') {
@@ -188,6 +218,66 @@ function gestionarVoz(btn, accion) {
         mensaje.lang = 'es-ES';
         window.speechSynthesis.speak(mensaje);
     }
+}
+
+function gestionarVozPunto(btn, event, tituloTexto, accion) {
+    event.stopPropagation();
+    if (accion === 'stop') {
+        window.speechSynthesis.cancel();
+        modoLecturaPunto = false;
+        estaPausado = false;
+        document.querySelectorAll('.bloque-final').forEach(c => c.classList.remove('leyendo-ahora'));
+        return;
+    }
+    if (accion === 'pause') {
+        if (window.speechSynthesis.speaking && !estaPausado) {
+            window.speechSynthesis.pause();
+            estaPausado = true;
+        }
+        return;
+    }
+    if (accion === 'play') {
+        if (estaPausado) {
+            window.speechSynthesis.resume();
+            estaPausado = false;
+            return;
+        }
+        
+        // Empezar lectura secuencial
+        const items = [{ texto: tituloTexto, elemento: null }];
+        let contenedor = btn.closest('.sec-A').nextElementSibling;
+        const textosC = contenedor.querySelectorAll('.bloque-final');
+        textosC.forEach(t => {
+            items.push({ 
+                texto: t.querySelector('.contenido-E').innerText, 
+                elemento: t 
+            });
+        });
+
+        if (items.length === 0) return;
+        modoLecturaPunto = true;
+        indiceLecturaPunto = 0;
+        listaLecturaPunto = items;
+        leerSiguienteDelPunto();
+    }
+}
+
+function leerSiguienteDelPunto() {
+    if (!modoLecturaPunto || indiceLecturaPunto >= listaLecturaPunto.length) {
+        modoLecturaPunto = false;
+        document.querySelectorAll('.bloque-final').forEach(c => c.classList.remove('leyendo-ahora'));
+        return;
+    }
+    const item = listaLecturaPunto[indiceLecturaPunto];
+    document.querySelectorAll('.bloque-final').forEach(c => c.classList.remove('leyendo-ahora'));
+    if (item.elemento) {
+        item.elemento.classList.add('leyendo-ahora');
+        item.elemento.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+    const mensaje = new SpeechSynthesisUtterance(item.texto);
+    mensaje.lang = 'es-ES';
+    mensaje.onend = () => { indiceLecturaPunto++; leerSiguienteDelPunto(); };
+    window.speechSynthesis.speak(mensaje);
 }
 
 function irAlMenu() {

@@ -1,8 +1,6 @@
 /* --- CONFIGURACIÓN DE CONEXIÓN --- */
-// URL de publicación en la web (CSV)
 const URL_BASE = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRQPIxpWVhMn0NvBCI1_NVLD9cc7Yk3iqsTu1c2aJXpokd1R86pH1R77WWX0ClR3dP5Dq7rlB8tfuio/pub?output=csv";
 
-// GIDs de cada hoja (Tema)
 const GIDS = {
     2: "990874879", 3: "1711453863", 4: "1927285028", 5: "959381328", 6: "231419367",
     7: "919487249", 8: "1710258635", 9: "393049523", 10: "1245517020", 14: "917229204",
@@ -35,7 +33,7 @@ const datosTemario = [
     { id: 25, cat: 'tema-azul', nombre: 'TEMA 25. Recogida, organización y representación de la información.' }
 ];
 
-/* --- VARIABLES DE CONTROL --- */
+/* --- VARIABLES GLOBALES DE AUDIO --- */
 let mensajeActual = null;
 let estaPausado = false;
 let listaLecturaPunto = [];
@@ -45,7 +43,7 @@ let modoLecturaPunto = false;
 /* --- INICIALIZACIÓN --- */
 function inicializar() {
     const grid = document.getElementById('grid-temas');
-    if(!grid) return;
+    if (!grid) return;
     grid.innerHTML = '';
     datosTemario.forEach(tema => {
         const btn = document.createElement('button');
@@ -61,13 +59,13 @@ async function cargarTema(temaObj) {
     document.getElementById('pantalla-tema').classList.remove('hidden');
     document.getElementById('titulo-tema-actual').innerText = temaObj.nombre;
     const contenedor = document.getElementById('contenedor-cascada');
-    contenedor.innerHTML = '<p style="text-align:center; padding:20px;">Accediendo a la nube de Google...</p>';
+    contenedor.innerHTML = '<p style="text-align:center; padding:20px;">Cargando datos...</p>';
 
     const urlFinal = URL_BASE.replace("output=csv", `gid=${GIDS[temaObj.id]}&output=csv`) + `&cache=${Date.now()}`;
 
     try {
         const response = await fetch(urlFinal);
-        if (!response.ok) throw new Error("Error al obtener datos del Excel.");
+        if (!response.ok) throw new Error("Error al obtener datos.");
         const csvText = await response.text();
         const filas = parsearCSV(csvText);
         const arbol = construirArbol(filas);
@@ -77,7 +75,7 @@ async function cargarTema(temaObj) {
     }
 }
 
-/* --- PROCESAMIENTO DE CSV Y ÁRBOL --- */
+/* --- LOGICA DE PROCESAMIENTO --- */
 function parsearCSV(texto) {
     const lineas = texto.split(/\r?\n(?=(?:(?:[^"]*"){2})*[^"]*$)/);
     return lineas.map(linea => {
@@ -101,14 +99,12 @@ function construirArbol(filas) {
     return arbol;
 }
 
-/* --- RENDERIZADO VISUAL EN CASCADA --- */
+/* --- RENDERIZADO VISUAL --- */
 function renderizarCascada(arbol, contenedor) {
     contenedor.innerHTML = '';
     Object.keys(arbol).forEach(a => {
-        // NIVEL A: Punto Principal (Sticky)
         const btnA = document.createElement('button');
         btnA.className = 'btn sec-A ' + getColorClase(a);
-        // Escapamos comillas simples para evitar errores en el onclick
         const tituloEscapado = a.replace(/'/g, "\\'");
         
         btnA.innerHTML = `
@@ -127,7 +123,9 @@ function renderizarCascada(arbol, contenedor) {
         Object.keys(arbol[a]).forEach(b => {
             let targetContB = divB;
             if (b !== "_ROOT_") {
-                const btnB = crearBotonNivel(b, 'btn nivel-B');
+                const btnB = document.createElement('button');
+                btnB.className = 'btn nivel-B';
+                btnB.innerText = b;
                 const subDivC = document.createElement('div');
                 subDivC.className = 'hidden';
                 btnB.onclick = (ev) => { ev.stopPropagation(); subDivC.classList.toggle('hidden'); };
@@ -139,7 +137,9 @@ function renderizarCascada(arbol, contenedor) {
             Object.keys(arbol[a][b]).forEach(c => {
                 let targetContC = targetContB;
                 if (c !== "_ROOT_") {
-                    const btnC = crearBotonNivel(c, 'btn nivel-C');
+                    const btnC = document.createElement('button');
+                    btnC.className = 'btn nivel-C';
+                    btnC.innerText = c;
                     const subDivD = document.createElement('div');
                     subDivD.className = 'hidden';
                     btnC.onclick = (ev) => { ev.stopPropagation(); subDivD.classList.toggle('hidden'); };
@@ -156,13 +156,6 @@ function renderizarCascada(arbol, contenedor) {
     });
 }
 
-function crearBotonNivel(texto, clase) {
-    const b = document.createElement('button');
-    b.className = clase;
-    b.innerText = texto;
-    return b;
-}
-
 function dibujarTarjetasFinales(bloques, contenedor) {
     bloques.forEach(item => {
         const card = document.createElement('div');
@@ -176,14 +169,20 @@ function dibujarTarjetasFinales(bloques, contenedor) {
 }
 
 function getColorClase(texto) {
-    const t = texto.toLowerCase();
+    const t = texto.toLowerCase().trim();
     if (t.includes('introducción')) return 'sec-intro';
     if (t.includes('conclusión')) return 'sec-concl';
     if (t.includes('bibliografía')) return 'sec-biblio';
-    return 'sec-num';
+    if (t.startsWith('1.')) return 'sec-p1';
+    if (t.startsWith('2.')) return 'sec-p2';
+    if (t.startsWith('3.')) return 'sec-p3';
+    if (t.startsWith('4.')) return 'sec-p4';
+    if (t.startsWith('5.')) return 'sec-p5';
+    if (t.startsWith('6.')) return 'sec-p6';
+    return 'sec-num'; 
 }
 
-/* --- SISTEMA DE VOZ CENTRALIZADO --- */
+/* --- SISTEMA DE VOZ --- */
 function gestionarVozPunto(btn, event, tituloTexto, accion) {
     event.stopPropagation();
     
@@ -211,8 +210,6 @@ function gestionarVozPunto(btn, event, tituloTexto, accion) {
         }
         
         window.speechSynthesis.cancel();
-        
-        // Recopilamos todos los bloques de texto D/E dentro de este Punto A
         const items = [{ texto: tituloTexto, elemento: null }];
         const contenedorPadre = btn.closest('.sec-A').nextElementSibling;
         const tarjetas = contenedorPadre.querySelectorAll('.bloque-final');
@@ -242,9 +239,8 @@ function leerSiguienteDelPunto() {
     }
 
     const item = listaLecturaPunto[indiceLecturaPunto];
-    
-    // Resaltado visual
     document.querySelectorAll('.bloque-final').forEach(c => c.classList.remove('leyendo-ahora'));
+    
     if (item.elemento) {
         item.elemento.classList.add('leyendo-ahora');
         item.elemento.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -256,7 +252,6 @@ function leerSiguienteDelPunto() {
         indiceLecturaPunto++;
         leerSiguienteDelPunto();
     };
-
     window.speechSynthesis.speak(mensaje);
 }
 

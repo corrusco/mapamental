@@ -1,224 +1,94 @@
-/* --- PALETA DE COLORES Y VARIABLES --- */
-:root {
-    --naranja-f: #ffe5d9; --naranja-m: #fb5607;
-    --amarillo-f: #fdffb6; --amarillo-m: #f9c74f;
-    --verde-f: #d8f3dc; --verde-m: #2d6a4f;
-    --rojo-f: #ffadad; --rojo-m: #c1121f;
-    --azul-f: #caf0f8; --azul-m: #0077b6;
-    --violeta-f: #f3e5f5; --violeta-m: #7b1fa2;
-    --fucsia-f: #fce4ec; --fucsia-m: #c2185b;
-    --turquesa-f: #e0f7fa; --turquesa-m: #0097a7;
-    --morado-f: #ede7f6; --morado-m: #512da8;
-    --negro-boton: #333333;
-    --fondo-gris: #f8f9fa;
-}
-
-/* --- CONFIGURACIÓN BASE PARA MÓVIL --- */
-body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    background-color: #ffffff;
-    margin: 0;
-    padding: 15px;
-    padding-top: env(safe-area-inset-top);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    -webkit-tap-highlight-color: transparent;
-    color: #333;
-}
+/* --- CABECERA Y JERARQUÍA STICKY --- */
 
 header {
     width: 100%;
     position: sticky;
     top: 0;
     background: white;
-    z-index: 1000;
-    padding: 15px 0;
-    margin-bottom: 20px;
-    border-bottom: 1px solid #eee;
-}
-
-h1 { 
-    font-size: 1.15rem; 
-    text-align: center; 
-    color: #333; 
-    margin: 0; 
-    font-weight: 800;
-    text-transform: uppercase;
-    /* CORRECCIÓN: Evita que el título se corte */
-    white-space: normal !important;
-    overflow: visible !important;
-    line-height: 1.4;
-    display: block;
-    width: 100%;
-}
-
-.container { 
-    width: 100%; 
-    max-width: 600px; 
-}
-
-.grid-temas { 
-    display: flex; 
-    flex-direction: column; 
-    gap: 12px; 
-}
-
-/* --- ESTILO DE LOS BOTONES (GENERAL) --- */
-.btn {
-    width: 100%;
-    display: block;
-    box-sizing: border-box;
-    height: auto !important;
-    min-height: 55px;
-    padding: 16px 20px;
-    margin-bottom: 8px;
-    border: 2px solid;
-    border-radius: 14px;
-    cursor: pointer;
-    text-align: left;
-    font-size: 1rem;
-    font-weight: 700;
-    line-height: 1.4;
-    transition: all 0.2s;
-    white-space: normal;
-}
-
-.btn:active {
-    filter: brightness(0.9);
-    transform: scale(0.98);
-}
-
-/* --- COLORES MENÚ PRINCIPAL --- */
-.tema-naranja { background-color: var(--naranja-f); border-color: var(--naranja-m); color: #852d00; }
-.tema-amarillo { background-color: var(--amarillo-f); border-color: var(--amarillo-m); color: #7a5d00; }
-.tema-verde { background-color: var(--verde-f); border-color: var(--verde-m); color: #1b4332; }
-.tema-rojo { background-color: var(--rojo-f); border-color: var(--rojo-m); color: #780000; }
-.tema-azul { background-color: var(--azul-f); border-color: var(--azul-m); color: #004b73; }
-
-/* --- JERARQUÍA CASCADA (COLUMNAS A, B, C) --- */
-.sec-A { border-width: 3px; margin-bottom: 12px; position: relative; display: flex; justify-content: space-between; align-items: center; }
-
-/* Colores dinámicos por tipo de sección */
-.sec-intro { background-color: var(--naranja-f); border-color: var(--naranja-m); }
-.sec-num { background-color: var(--verde-f); border-color: var(--verde-m); }
-.sec-concl { background-color: var(--amarillo-f); border-color: var(--amarillo-m); }
-.sec-biblio { background-color: var(--morado-f); border-color: var(--morado-m); }
-
-.nivel-B { 
-    margin-left: 15px; 
-    width: calc(100% - 15px); 
-    background-color: #ffffff; 
-    border-color: #ddd; 
-    font-size: 0.95rem; 
-}
-
-.nivel-C { 
-    margin-left: 30px; 
-    width: calc(100% - 30px); 
-    background-color: #fafafa; 
-    border-style: dashed; 
-    border-color: #ccc; 
-    font-size: 0.9rem; 
-    font-weight: 600;
-}
-
-/* --- TARJETAS FINALES (COLUMNAS D y E) --- */
-.bloque-final {
-    margin-left: 15px;
-    margin-bottom: 15px;
-    padding: 15px;
-    background: white;
-    border: 1.5px solid #eee;
-    border-left: 5px solid var(--azul-m);
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    transition: background-color 0.4s;
-}
-
-.titulo-D { 
-    font-weight: 800; 
-    color: var(--azul-m); 
-    font-size: 0.95rem; 
-    display: block; 
-    margin-bottom: 8px; 
-}
-
-.contenido-E { 
-    font-size: 0.95rem; 
-    line-height: 1.5; 
-    color: #444; 
-}
-
-/* --- EFECTO DE RESALTADO AL LEER --- */
-.leyendo-ahora {
-    background-color: rgba(251, 140, 0, 0.1) !important;
-    border-color: var(--color-intro) !important;
-    box-shadow: 0 0 12px rgba(251, 140, 0, 0.2);
-}
-
-/* --- CONTROLES DE VOZ --- */
-/* Estilo 3 botones (Play, Pause, Stop) en Cabeceras */
-.controles-punto {
-    display: flex;
-    gap: 5px;
-    margin-left: 10px;
-}
-
-.btn-punto {
-    background: var(--negro-boton);
-    color: white;
-    border: none;
-    border-radius: 6px;
-    padding: 8px 10px;
-    font-size: 0.85rem;
-    cursor: pointer;
+    z-index: 2000; /* El más alto */
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+    height: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
-    min-width: 35px;
 }
 
-/* Estilo controles en tarjetas individuales */
-.controles-voz {
-    display: flex;
-    gap: 8px;
-    margin-top: 12px;
-    border-top: 1px solid #f0f0f0;
-    padding-top: 10px;
+/* Punto Principal (Columna A) */
+.sec-A {
+    position: sticky;
+    top: 50px; /* Debajo del header */
+    z-index: 1500;
+    margin-bottom: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-.btn-voz {
-    background: #f4f4f4;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    padding: 8px 12px;
-    font-size: 0.9rem;
-    cursor: pointer;
-    color: #333;
+/* Subpunto (Columna B) */
+.nivel-B {
+    position: sticky;
+    top: 105px; /* Altura header (50) + sec-A (aprox 55) */
+    z-index: 1400;
+    font-size: 0.9rem !important;
+    padding: 10px 15px !important;
+    min-height: 40px !important;
+    background: #fff !important;
 }
 
-.btn-voz:active { background: #e0e0e0; }
+/* Sub-subpunto (Columna C) */
+.nivel-C {
+    position: sticky;
+    top: 145px; /* Debajo de B */
+    z-index: 1300;
+    font-size: 0.85rem !important;
+    padding: 8px 12px !important;
+    min-height: 35px !important;
+    background: #fdfdfd !important;
+}
 
-/* --- UTILIDADES --- */
-.hidden { display: none !important; }
+/* --- BLOQUE FINAL (Limpieza) --- */
+.bloque-final {
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 15px;
+    padding: 15px;
+    background: white;
+    border-radius: 8px;
+    border: 1px solid #eee;
+    /* Quitamos el borde lateral grueso para ahorrar espacio visual */
+}
 
-#btn-volver {
-    width: 100%;
-    margin: 40px 0;
-    padding: 20px;
-    background: #222;
-    color: white;
-    border: none;
-    border-radius: 12px;
+.titulo-D {
     font-weight: 800;
-    font-size: 1rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+    color: var(--azul-m);
+    font-size: 0.9rem;
+    display: block;
+    margin-bottom: 5px;
 }
 
-/* Ajuste para que el texto de la sección A no pise los botones */
-.sec-A span {
-    flex: 1;
-    padding-right: 5px;
+.contenido-E {
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+/* Eliminamos los controles de voz de las tarjetas */
+.controles-voz {
+    display: none !important;
+}
+
+/* Efecto de lectura para el bloque entero */
+.leyendo-ahora {
+    background-color: rgba(251, 140, 0, 0.08) !important;
+    border: 1px solid var(--naranja-m) !important;
+}
+
+/* Botones de voz en A (más pequeños) */
+.controles-punto {
+    display: flex;
+    gap: 3px;
+}
+
+.btn-punto {
+    padding: 4px 8px !important;
+    font-size: 0.75rem !important;
+    min-width: 30px;
 }

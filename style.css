@@ -8,7 +8,10 @@
     --violeta-f: #f3e5f5; --violeta-m: #7b1fa2;
     --fucsia-f: #fce4ec; --fucsia-m: #c2185b;
     --turquesa-f: #e0f7fa; --turquesa-m: #0097a7;
-    --morado-f: #ede7f6; --morado-m: #512da8;
+    --morado-f: #ede7f6; --morado-m: #512da8; /* Para Punto 2 */
+    --gris-f: #f5f5f5; --gris-m: #757575;     /* Para Punto 6 */
+    --lila-f: #f3e5f5; --lila-m: #9c27b0;     /* Para Bibliografía */
+    
     --negro-boton: #222222;
 }
 
@@ -22,6 +25,7 @@ body {
     flex-direction: column;
     align-items: center;
     color: #333;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .container { width: 100%; max-width: 600px; }
@@ -33,10 +37,10 @@ header {
     position: sticky;
     top: 0;
     background: white;
-    z-index: 4000; /* Siempre encima de todo */
+    z-index: 4000;
     padding: 10px 0;
     border-bottom: 2px solid #eee;
-    height: 60px; /* Altura fija para control de offsets */
+    height: 60px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -49,22 +53,21 @@ h1 {
     text-transform: uppercase;
     margin: 0;
     line-height: 1.2;
-    max-width: 90%;
+    max-width: 95%;
 }
 
-/* --- JERARQUÍA STICKY (A, B, C) --- 
-   Ajustamos los 'top' para que no se pisen */
+/* --- JERARQUÍA STICKY (A, B, C) --- */
 
 /* Nivel A: Punto Principal */
 .sec-A {
     position: sticky;
-    top: 60px; /* Justo después del header */
+    top: 60px; 
     z-index: 3000;
     border-width: 2px;
     margin-top: 10px;
     margin-bottom: 4px;
-    padding: 8px 12px !important;
-    min-height: 65px !important; /* Un poco más de espacio para el texto largo */
+    padding: 10px 12px !important;
+    min-height: 65px !important;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -74,12 +77,13 @@ h1 {
 /* Nivel B: Subpunto */
 .nivel-B {
     position: sticky;
-    top: 135px; /* Offset aumentado para evitar solape con A */
+    top: 135px; 
     z-index: 2000;
     margin-left: 8px;
     width: calc(100% - 8px);
     background-color: #ffffff !important;
     border-color: #ddd !important;
+    color: #333 !important;
     font-size: 0.85rem !important;
     padding: 8px 12px !important;
     min-height: 45px !important;
@@ -89,18 +93,38 @@ h1 {
 /* Nivel C: Sub-subpunto */
 .nivel-C {
     position: sticky;
-    top: 185px; /* Offset aumentado para evitar solape con B */
+    top: 185px; 
     z-index: 1000;
     margin-left: 16px;
     width: calc(100% - 16px);
     background-color: #fcfcfc !important;
     border-style: dashed !important;
     border-color: #ccc !important;
+    color: #555 !important;
     font-size: 0.8rem !important;
     font-weight: 600 !important;
     padding: 6px 10px !important;
     min-height: 35px !important;
 }
+
+/* --- ASIGNACIÓN CROMÁTICA POR PUNTOS --- */
+
+.sec-intro { background-color: var(--naranja-f) !important; border-color: var(--naranja-m) !important; color: #852d00 !important; }
+.sec-p1 { background-color: var(--verde-f) !important; border-color: var(--verde-m) !important; color: #1b4332 !important; }
+.sec-p2 { background-color: var(--morado-f) !important; border-color: var(--morado-m) !important; color: #311b92 !important; }
+.sec-p3 { background-color: var(--azul-f) !important; border-color: var(--azul-m) !important; color: #004b73 !important; }
+.sec-p4 { background-color: var(--rojo-f) !important; border-color: var(--rojo-m) !important; color: #780000 !important; }
+.sec-p5 { background-color: var(--turquesa-f) !important; border-color: var(--turquesa-m) !important; color: #006064 !important; }
+.sec-p6 { background-color: var(--gris-f) !important; border-color: var(--gris-m) !important; color: #424242 !important; }
+.sec-concl { background-color: var(--amarillo-f) !important; border-color: var(--amarillo-m) !important; color: #7a5d00 !important; }
+.sec-biblio { background-color: var(--lila-f) !important; border-color: var(--lila-m) !important; color: #4a148c !important; }
+
+/* Botones del menú principal (usan las categorías de datosTemario) */
+.tema-naranja { background-color: var(--naranja-f); border-color: var(--naranja-m); color: #852d00; }
+.tema-amarillo { background-color: var(--amarillo-f); border-color: var(--amarillo-m); color: #7a5d00; }
+.tema-verde { background-color: var(--verde-f); border-color: var(--verde-m); color: #1b4332; }
+.tema-rojo { background-color: var(--rojo-f); border-color: var(--rojo-m); color: #780000; }
+.tema-azul { background-color: var(--azul-f); border-color: var(--azul-m); color: #004b73; }
 
 /* --- BOTONES GENERALES --- */
 .btn {
@@ -118,28 +142,7 @@ h1 {
 
 .btn:active { transform: scale(0.98); filter: brightness(0.9); }
 
-/* --- COLORES --- */
-.tema-naranja, .sec-intro { background-color: var(--naranja-f); border-color: var(--naranja-m); color: #852d00; }
-.tema-amarillo, .sec-concl { background-color: var(--amarillo-f); border-color: var(--amarillo-m); color: #7a5d00; }
-.tema-verde, .sec-num { background-color: var(--verde-f); border-color: var(--verde-m); color: #1b4332; }
-.tema-rojo { background-color: var(--rojo-f); border-color: var(--rojo-m); color: #780000; }
-.tema-azul { background-color: var(--azul-f); border-color: var(--azul-m); color: #004b73; }
-.sec-biblio { background-color: var(--morado-f); border-color: var(--morado-m); color: #512da8; }
-
-/* --- TARJETAS DE CONTENIDO --- */
-.bloque-final {
-    margin: 8px 5px 12px 15px;
-    padding: 12px;
-    background: white;
-    border: 1px solid #eee;
-    border-left: 4px solid var(--azul-m);
-    border-radius: 8px;
-}
-
-.titulo-D { font-weight: 800; color: var(--azul-m); font-size: 0.85rem; display: block; margin-bottom: 4px; }
-.contenido-E { font-size: 0.9rem; line-height: 1.4; color: #444; }
-
-/* --- CONTROLES DE VOZ --- */
+/* --- CONTROLES DE VOZ (NIVEL A) --- */
 .controles-punto {
     display: flex;
     flex-direction: row;
@@ -147,7 +150,7 @@ h1 {
     background: rgba(0,0,0,0.08);
     padding: 4px;
     border-radius: 8px;
-    flex-shrink: 0; /* Evita que se encojan si el texto es muy largo */
+    flex-shrink: 0;
 }
 
 .btn-punto {
@@ -164,22 +167,45 @@ h1 {
     cursor: pointer;
 }
 
-/* Ajuste texto en A para que no empuje los botones abajo */
+/* Ajuste texto en A */
 .sec-A span {
     flex: 1;
     padding-right: 10px;
     font-size: 0.85rem;
 }
 
-/* --- ESTILO LECTURA --- */
+/* --- TARJETAS DE CONTENIDO FINAL --- */
+.bloque-final {
+    margin: 10px 5px 15px 15px;
+    padding: 14px;
+    background: white;
+    border: 1px solid #eee;
+    border-left: 4px solid var(--azul-m);
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.titulo-D { font-weight: 800; color: var(--azul-m); font-size: 0.85rem; display: block; margin-bottom: 5px; }
+.contenido-E { font-size: 0.9rem; line-height: 1.45; color: #444; }
+
+/* Efecto visual al leer */
 .leyendo-ahora {
     background-color: rgba(251, 140, 0, 0.1) !important;
     border-color: var(--naranja-m) !important;
+    transition: background-color 0.3s;
 }
 
 /* --- BOTÓN VOLVER --- */
 #btn-volver {
-    width: 100%; margin: 40px 0; padding: 18px;
-    background: #333; color: white; border: none; border-radius: 12px;
-    font-weight: 800; text-transform: uppercase;
+    width: 100%;
+    margin: 40px 0;
+    padding: 18px;
+    background: #333;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-weight: 800;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }

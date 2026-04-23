@@ -1,94 +1,217 @@
-/* --- CABECERA Y JERARQUÍA STICKY --- */
+/* --- PALETA DE COLORES Y VARIABLES --- */
+:root {
+    --naranja-f: #ffe5d9; --naranja-m: #fb5607;
+    --amarillo-f: #fdffb6; --amarillo-m: #f9c74f;
+    --verde-f: #d8f3dc; --verde-m: #2d6a4f;
+    --rojo-f: #ffadad; --rojo-m: #c1121f;
+    --azul-f: #caf0f8; --azul-m: #0077b6;
+    --violeta-f: #f3e5f5; --violeta-m: #7b1fa2;
+    --fucsia-f: #fce4ec; --fucsia-m: #c2185b;
+    --turquesa-f: #e0f7fa; --turquesa-m: #0097a7;
+    --morado-f: #ede7f6; --morado-m: #512da8;
+    --negro-boton: #222222;
+    --fondo-gris-claro: #fcfcfc;
+}
 
+/* --- CONFIGURACIÓN BASE PARA MÓVIL --- */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: #ffffff;
+    margin: 0;
+    padding: 0 10px 15px 10px; /* Menos margen lateral para ganar espacio */
+    padding-top: env(safe-area-inset-top);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    -webkit-tap-highlight-color: transparent;
+    color: #333;
+}
+
+.container { 
+    width: 100%; 
+    max-width: 600px; 
+}
+
+/* --- CABECERA FIJA (TÍTULO DEL TEMA) --- */
 header {
     width: 100%;
     position: sticky;
     top: 0;
     background: white;
-    z-index: 2000; /* El más alto */
-    padding: 10px 0;
-    border-bottom: 1px solid #ddd;
-    height: 50px;
+    z-index: 2000;
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+    min-height: 45px;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-/* Punto Principal (Columna A) */
-.sec-A {
-    position: sticky;
-    top: 50px; /* Debajo del header */
-    z-index: 1500;
-    margin-bottom: 5px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+h1 { 
+    font-size: 1rem; 
+    text-align: center; 
+    color: #333; 
+    margin: 0; 
+    font-weight: 800;
+    text-transform: uppercase;
+    white-space: normal !important;
+    overflow: visible !important;
+    line-height: 1.3;
+    display: block;
 }
 
-/* Subpunto (Columna B) */
+/* --- JERARQUÍA STICKY (A, B, C) --- */
+
+/* Nivel A: Punto Principal (Ej: 1. La Concreción...) */
+.sec-A {
+    position: sticky;
+    top: 55px; /* Justo debajo del header */
+    z-index: 1500;
+    border-width: 3px;
+    margin-top: 15px;
+    margin-bottom: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Nivel B: Subpunto (Ej: 1.1. Definición...) */
 .nivel-B {
     position: sticky;
-    top: 105px; /* Altura header (50) + sec-A (aprox 55) */
+    top: 110px; /* Debajo de A */
     z-index: 1400;
+    margin-left: 10px;
+    width: calc(100% - 10px);
+    background-color: #ffffff !important;
+    border-color: #ccc !important;
     font-size: 0.9rem !important;
     padding: 10px 15px !important;
     min-height: 40px !important;
-    background: #fff !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
 
-/* Sub-subpunto (Columna C) */
+/* Nivel C: Sub-subpunto (Ej: 1.1.1. Niveles...) */
 .nivel-C {
     position: sticky;
-    top: 145px; /* Debajo de B */
+    top: 150px; /* Debajo de B */
     z-index: 1300;
+    margin-left: 20px;
+    width: calc(100% - 20px);
+    background-color: var(--fondo-gris-claro) !important;
+    border-style: dashed !important;
+    border-color: #bbb !important;
     font-size: 0.85rem !important;
+    font-weight: 600 !important;
     padding: 8px 12px !important;
     min-height: 35px !important;
-    background: #fdfdfd !important;
 }
 
-/* --- BLOQUE FINAL (Limpieza) --- */
+/* --- BOTONES GENERALES --- */
+.btn {
+    width: 100%;
+    display: block;
+    box-sizing: border-box;
+    height: auto !important;
+    border: 2px solid;
+    border-radius: 12px;
+    cursor: pointer;
+    text-align: left;
+    font-weight: 700;
+    line-height: 1.4;
+    transition: all 0.2s;
+    white-space: normal;
+}
+
+.btn:active { transform: scale(0.98); filter: brightness(0.9); }
+
+/* --- COLORES DINÁMICOS --- */
+.tema-naranja { background-color: var(--naranja-f); border-color: var(--naranja-m); color: #852d00; }
+.tema-amarillo { background-color: var(--amarillo-f); border-color: var(--amarillo-m); color: #7a5d00; }
+.tema-verde { background-color: var(--verde-f); border-color: var(--verde-m); color: #1b4332; }
+.tema-rojo { background-color: var(--rojo-f); border-color: var(--rojo-m); color: #780000; }
+.tema-azul { background-color: var(--azul-f); border-color: var(--azul-m); color: #004b73; }
+
+.sec-intro { background-color: var(--naranja-f); border-color: var(--naranja-m); }
+.sec-num { background-color: var(--verde-f); border-color: var(--verde-m); }
+.sec-concl { background-color: var(--amarillo-f); border-color: var(--amarillo-m); }
+.sec-biblio { background-color: var(--morado-f); border-color: var(--morado-m); }
+
+/* --- TARJETAS FINALES (BLOQUES D y E) --- */
 .bloque-final {
-    margin-left: 10px;
-    margin-right: 10px;
-    margin-bottom: 15px;
+    margin-left: 20px;
+    margin-right: 5px;
+    margin-bottom: 12px;
     padding: 15px;
     background: white;
-    border-radius: 8px;
     border: 1px solid #eee;
-    /* Quitamos el borde lateral grueso para ahorrar espacio visual */
+    border-left: 4px solid var(--azul-m);
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
 
-.titulo-D {
-    font-weight: 800;
-    color: var(--azul-m);
-    font-size: 0.9rem;
-    display: block;
-    margin-bottom: 5px;
+.titulo-D { 
+    font-weight: 800; 
+    color: var(--azul-m); 
+    font-size: 0.85rem; 
+    display: block; 
+    margin-bottom: 5px; 
 }
 
-.contenido-E {
-    font-size: 0.9rem;
-    line-height: 1.4;
+.contenido-E { 
+    font-size: 0.9rem; 
+    line-height: 1.45; 
+    color: #444; 
 }
 
-/* Eliminamos los controles de voz de las tarjetas */
-.controles-voz {
-    display: none !important;
-}
-
-/* Efecto de lectura para el bloque entero */
+/* HIGHLIGHT DURANTE LA LECTURA */
 .leyendo-ahora {
-    background-color: rgba(251, 140, 0, 0.08) !important;
-    border: 1px solid var(--naranja-m) !important;
+    background-color: rgba(251, 140, 0, 0.1) !important;
+    border-color: var(--naranja-m) !important;
+    transition: background-color 0.3s;
 }
 
-/* Botones de voz en A (más pequeños) */
+/* --- CONTROLES DE VOZ EN NIVEL A --- */
 .controles-punto {
     display: flex;
-    gap: 3px;
+    gap: 4px;
+    margin-left: 10px;
 }
 
 .btn-punto {
-    padding: 4px 8px !important;
-    font-size: 0.75rem !important;
-    min-width: 30px;
+    background: var(--negro-boton);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 8px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 32px;
+}
+
+/* --- UTILIDADES --- */
+.hidden { display: none !important; }
+
+#btn-volver {
+    width: 100%;
+    margin: 40px 0;
+    padding: 18px;
+    background: #333;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-weight: 800;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Ajuste para que el texto no se oculte tras los botones de voz */
+.sec-A span {
+    flex: 1;
+    padding-right: 5px;
+    font-size: 0.95rem;
 }
